@@ -130,6 +130,15 @@ const UI = (function () {
     return el('span', { className: 'badge badge--neutral', text: text });
   }
 
+  /* Badge de nivel: escala visual propria, separada das cores de status. */
+  function levelBadge(nivel) {
+    return el('span', {
+      className: 'badge badge--nivel',
+      text: nivel,
+      attrs: { 'data-nivel': nivel }
+    });
+  }
+
   function tagBadge(text) {
     return el('span', { className: 'badge badge--tag', text: text });
   }
@@ -338,7 +347,7 @@ const UI = (function () {
     const status = Storage.getCompetenceStatus(comp.Competencia_ID);
 
     const badges = clear(document.getElementById('drawer-badges'));
-    badges.appendChild(neutralBadge(comp.Nivel));
+    badges.appendChild(levelBadge(comp.Nivel));
     badges.appendChild(statusBadge(status));
 
     document.getElementById('drawer-title').textContent = comp.Competencia;
@@ -606,6 +615,7 @@ const UI = (function () {
     cardTypeLabel: cardTypeLabel,
     statusBadge: statusBadge,
     neutralBadge: neutralBadge,
+    levelBadge: levelBadge,
     tagBadge: tagBadge,
     progressBar: progressBar,
     safeUrl: safeUrl,
