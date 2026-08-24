@@ -44,10 +44,26 @@
 
   --sidebar-w: 232px;
   --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Cores de identificação das Áreas de Atuação.
+     Usadas apenas em faixas e marcadores finos: as cores de status continuam com prioridade. */
+  --area-processos: #6B4FA0;
+  --area-sistemas: #2E7D8F;
+  --area-dados: #B4763A;
+  --area-cyber: #A24759;
 }
 
+[data-area="AREA001"] { --area-color: var(--area-processos); }
+[data-area="AREA002"] { --area-color: var(--area-sistemas); }
+[data-area="AREA003"] { --area-color: var(--area-dados); }
+[data-area="AREA004"] { --area-color: var(--area-cyber); }
+
 * { box-sizing: border-box; }
+
+/* O atributo hidden precisa vencer qualquer regra de display definida por classe
+   (drawer, modal e menus usam display: flex). Sem isso, eles ficam sempre visíveis. */
 [hidden] { display: none !important; }
+
 html, body {
   margin: 0;
   padding: 0;
@@ -262,6 +278,41 @@ button { font-family: inherit; }
 }
 .badge--neutral { background: #F5F6F8; border-color: var(--border); color: var(--text-2); }
 .badge--tag { background: var(--surface); border-color: var(--border); color: var(--text-3); font-weight: 500; }
+
+/* Nível: escala de intensidade própria, independente das cores de status */
+.badge--nivel { background: #F3F4F9; border-color: #DDDFEC; color: #5D6486; }
+.badge--nivel[data-nivel="Intermediário"] { background: #E9EAF6; border-color: #C6C9E5; color: #4A4F86; }
+.badge--nivel[data-nivel="Avançado"] { background: #DDDFF2; border-color: #AEB3DE; color: #3B4080; }
+.badge--nivel[data-nivel="Especialista"] { background: #464C86; border-color: #464C86; color: #FFFFFF; }
+
+/* ---------- Faixa de cor por Área ---------- */
+
+.comp-card[data-area],
+.mini-card[data-area],
+.kcard[data-area],
+.card[data-area],
+.area-card[data-area],
+.map-cat[data-area] {
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: var(--area-color, var(--border));
+}
+
+.group-area-title[data-area],
+.map-area-title[data-area] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.group-area-title[data-area]::before,
+.map-area-title[data-area]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--area-color, var(--text-3));
+  flex: none;
+}
 
 .badge[data-status="OPEN"] { background: var(--open-bg); border-color: var(--open-border); color: var(--open-text); }
 .badge[data-status="STANDBY"] { background: var(--standby-bg); border-color: var(--standby-border); color: var(--standby-text); }
