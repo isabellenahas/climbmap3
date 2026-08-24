@@ -57,10 +57,10 @@ const Views = (function () {
     const status = Storage.getCompetenceStatus(comp.Competencia_ID);
     return el('button', {
       className: 'mini-card',
-      attrs: { type: 'button' },
+      attrs: { type: 'button', 'data-area': context.area ? context.area.Area_ID : '' },
       on: { click: function () { UI.openCompetenceDrawer(comp.Competencia_ID); } }
     }, [
-      el('div', { className: 'badge-row' }, [UI.statusBadge(status), UI.neutralBadge(comp.Nivel)]),
+      el('div', { className: 'badge-row' }, [UI.statusBadge(status), UI.levelBadge(comp.Nivel)]),
       el('p', { className: 'mini-card-title', text: comp.Competencia }),
       el('p', {
         className: 'mini-card-meta',
@@ -108,7 +108,7 @@ const Views = (function () {
     Data.getActiveAreas().forEach(function (area) {
       const comps = Data.getCompetencesByArea(area.Area_ID);
       const s = statusesOf(comps);
-      areaList.appendChild(el('div', { className: 'card' }, [
+      areaList.appendChild(el('div', { className: 'card', attrs: { 'data-area': area.Area_ID } }, [
         el('div', { className: 'area-row-head' }, [
           el('div', {}, [
             el('p', { className: 'area-name', text: area.Area_Atuacao }),
@@ -341,7 +341,11 @@ const Views = (function () {
 
     groups.forEach(function (group) {
       if (showAreaTitles) {
-        listWrap.appendChild(el('h2', { className: 'group-area-title', text: group.area.Area_Atuacao }));
+        listWrap.appendChild(el('h2', {
+          className: 'group-area-title',
+          text: group.area.Area_Atuacao,
+          attrs: { 'data-area': group.area.Area_ID }
+        }));
       }
       group.categories.forEach(function (bucket) {
         listWrap.appendChild(el('section', { className: 'group-cat' }, [
@@ -378,7 +382,12 @@ const Views = (function () {
 
     return el('article', {
       className: 'comp-card',
-      attrs: { tabindex: '0', role: 'button', 'aria-label': comp.Competencia },
+      attrs: {
+        tabindex: '0',
+        role: 'button',
+        'aria-label': comp.Competencia,
+        'data-area': context.area ? context.area.Area_ID : ''
+      },
       on: {
         click: function () { UI.openCompetenceDrawer(comp.Competencia_ID); },
         keydown: function (e) {
@@ -389,7 +398,7 @@ const Views = (function () {
         }
       }
     }, [
-      el('div', { className: 'badge-row' }, [UI.neutralBadge(comp.Nivel), UI.statusBadge(status)]),
+      el('div', { className: 'badge-row' }, [UI.levelBadge(comp.Nivel), UI.statusBadge(status)]),
       el('h4', { className: 'comp-card-title', text: comp.Competencia }),
       el('p', { className: 'comp-card-desc', text: comp.Descricao_Aprendizado || '' }),
       el('div', { className: 'comp-card-foot' }, [
@@ -603,7 +612,10 @@ const Views = (function () {
       onSelect: function () { UI.openCompetenceDrawer(comp.Competencia_ID); }
     });
 
-    const card = el('article', { className: 'kcard' }, [
+    const card = el('article', {
+      className: 'kcard',
+      attrs: { 'data-area': context.area ? context.area.Area_ID : '' }
+    }, [
       el('div', { className: 'kcard-top' }, [
         UI.tagBadge('COMPETÊNCIA'),
         menuButton(items)
@@ -626,7 +638,7 @@ const Views = (function () {
         className: 'kcard-meta',
         text: (context.area ? context.area.Area_Atuacao : '') + ' · ' + (context.category ? context.category.Categoria : '')
       }),
-      el('div', { className: 'kcard-foot' }, [UI.neutralBadge(comp.Nivel)])
+      el('div', { className: 'kcard-foot' }, [UI.levelBadge(comp.Nivel)])
     ]);
 
     makeDraggable(card, { kind: 'competence', id: comp.Competencia_ID });
@@ -756,7 +768,7 @@ const Views = (function () {
         const s = statusesOf(Data.getCompetencesByArea(area.Area_ID));
         return el('button', {
           className: 'card area-card',
-          attrs: { type: 'button' },
+          attrs: { type: 'button', 'data-area': area.Area_ID },
           on: {
             click: function () {
               progressFilters.areaId = area.Area_ID;
@@ -800,10 +812,17 @@ const Views = (function () {
     const mapWrap = el('div', {});
 
     groups.forEach(function (group) {
-      mapWrap.appendChild(el('h3', { className: 'map-area-title', text: group.area.Area_Atuacao }));
+      mapWrap.appendChild(el('h3', {
+        className: 'map-area-title',
+        text: group.area.Area_Atuacao,
+        attrs: { 'data-area': group.area.Area_ID }
+      }));
       group.categories.forEach(function (bucket) {
         const s = statusesOf(bucket.competences);
-        const block = el('section', { className: 'map-cat' }, [
+        const block = el('section', {
+          className: 'map-cat',
+          attrs: { 'data-area': group.area.Area_ID }
+        }, [
           el('div', { className: 'map-cat-head' }, [
             el('h4', { className: 'map-cat-title', text: bucket.category.Categoria }),
             el('p', {
